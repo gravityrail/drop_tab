@@ -1,0 +1,31 @@
+<style>
+  #tabhead {
+    background-image: url(<%= asset_path "cartoon_cardran_c64.png" %>);
+    background-repeat: no-repeat;
+    width: 557px;
+    height: 400px;
+  }
+  ul#uploads { list-style-type: none;}
+</style>
+
+<div id="tabhead">
+  <blockquote class="oval-thought-border">
+    Drop a file anywhere, or submit a URL below:<br /><br />
+    <%= form_for Entry.new, :remote => true do |f| %>
+      <%= f.text_field :original_url %>
+    <% end %>
+    <!-- full-screen upload -->
+    <%= s3_uploader_form callback_url: entries_url, callback_param: "entry[original_url]", id: "s3-uploader" do %>
+      <%= file_field_tag :file, multiple: true, hidden: true %>
+    <% end %>
+    <ul id="uploads">
+    </ul>
+  </blockquote>
+</div>
+
+<script id="template-upload" type="text/x-tmpl">
+<div id="file-{%=o.unique_id%}" class="upload">
+  {%=o.name%}
+  <div class="progress"><div class="bar" style="width: 0%"></div></div>
+</div>
+</script>

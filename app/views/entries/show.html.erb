@@ -1,0 +1,9 @@
+<h1><%= @entry.title %></h1>
+
+<p><%= image_tag @entry.image_url %></p>
+
+<p>
+  <%= link_to "Edit", edit_entry_path(@entry) %> |
+  <%= link_to "Destroy", @entry, :confirm => 'Are you sure?', :method => :delete %> |
+  <%= link_to "Back to Entries", entries_path %>
+</p>

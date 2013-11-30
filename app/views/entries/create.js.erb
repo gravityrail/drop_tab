@@ -1,0 +1,6 @@
+<% if @entry.new_record? %>
+  alert("Failed to upload entry: <%= j @entry.errors.full_messages.join(', ').html_safe %>");
+<% else %>
+  $('#entry_original_url').val('');
+  $("#uploads").append('<%= j "<li>Uploaded \"#{@entry.title}\"</li>".html_safe %>');
+<% end %>

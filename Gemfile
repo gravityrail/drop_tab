@@ -10,6 +10,18 @@ gem 'rails', '3.2.15'
 gem 'pg'
 gem 'rails_12factor', group: :production
 
+gem 's3_direct_upload'
+gem 'zencoder'
+gem 'videojs_rails'
+gem 'ruby-oembed'
+
+# dev stuffs
+group :development do
+  gem 'zencoder-fetcher'
+  gem 'pry'
+  gem 'pry-debugger'
+end
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do

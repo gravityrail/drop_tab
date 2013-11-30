@@ -1,0 +1,22 @@
+<h1>Submissions</h1>
+<% @entries.each do |entry| %>
+  <h2><%= entry.original_file_name %></h2>
+  <strong>created:</strong> <%= entry.created_at %><br />
+  <% if entry.is_url? %>
+    <% if entry.html %>
+      <%= entry.html.html_safe %>
+    <% elsif entry.thumb_url %>
+      <%= link_to image_tag(entry.thumb_url, width: entry.thumb_width, height: entry.thumb_height), entry.original_url %>
+    <% else %>
+      <%= link_to entry.original_url, entry.original_url, target: "_blank" %>
+    <% end %>
+  <% elsif entry.is_video? %>
+    <% if entry.zencoder_processed? %>
+      <%= videojs_rails sources: { mp4: entry.processed_url }, width: entry.width, height: entry.height %>
+    <% else %>
+      <p>Still processing</p>
+    <% end %>
+  <% else %>
+    <p><%= link_to image_tag(entry.original_url, width: 640), entry.original_url %></p>
+  <% end %>
+<% end %>

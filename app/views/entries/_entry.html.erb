@@ -1,0 +1,7 @@
+<%#= link_to image_tag(entry.thumb_url), entry if entry.thumb_url %>
+<%= entry.original_file_name %>
+
+<div>
+  <%= link_to "edit", edit_entry_path(entry) %> |
+  <%= link_to "remove", entry, :confirm => 'Are you sure?', :method => :delete %>
+</div>
