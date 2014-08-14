@@ -11,11 +11,23 @@ class Entry < ActiveRecord::Base
   }
 
   def is_video?
-    !is_url? && !is_image?
+    content_type =~ %r{^video/}
   end
 
   def is_image?
-    !is_url? && ['jpg','png'].include?(extension)
+    content_type =~ %r{^image/}
+  end
+
+  def is_upload?
+    !is_url?
+  end
+
+  def is_oembed?
+    !!html
+  end
+
+  def has_thumb?
+    !!thumb_url
   end
 
   def is_url?
@@ -36,7 +48,6 @@ class Entry < ActiveRecord::Base
     self.thumb_url = result['thumbnail_url']
     self.thumb_width = result['thumbnail_width']
     self.thumb_height = result['thumbnail_height']
-    puts result.inspect
     return true
   rescue OEmbed::NotFound => e
     return true
@@ -44,15 +55,13 @@ class Entry < ActiveRecord::Base
 
   before_create :set_title
   def set_title
-    if original_file_name && !title
-      title = original_file_name
-    end
+    self.title ||= self.original_file_name
   end
 
   after_create :zencode
   def zencode
-    return true if zencoder_processed ||
-                   !is_video?
+    return unless is_video?
+    return if zencoder_processed
 
     input = original_url.gsub('http://s3.amazonaws.com/', 's3://') # url format: s3://bucket/path/to/file.avi
     base_url = input.gsub(/[^\/]*$/, '') # trim non-path trailing chars, i.e. filename

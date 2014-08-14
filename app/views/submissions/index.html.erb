@@ -2,21 +2,35 @@
 <% @entries.each do |entry| %>
   <h2><%= entry.original_file_name %></h2>
   <strong>created:</strong> <%= entry.created_at %><br />
-  <% if entry.is_url? %>
-    <% if entry.html %>
-      <%= entry.html.html_safe %>
-    <% elsif entry.thumb_url %>
-      <%= link_to image_tag(entry.thumb_url, width: entry.thumb_width, height: entry.thumb_height), entry.original_url %>
-    <% else %>
-      <%= link_to entry.original_url, entry.original_url, target: "_blank" %>
-    <% end %>
+  <% if entry.is_oembed? %>
+
+    <%= entry.html.html_safe %>
+
+  <% elsif entry.is_url? %>
+
+    <% link_body = if entry.has_thumb?
+                      image_tag(entry.thumb_url, width: entry.thumb_width, height: entry.thumb_height)
+                   else
+                      entry.original_url
+                   end %>
+
+    <%= link_to link_body, entry.original_url %>
+
   <% elsif entry.is_video? %>
+
     <% if entry.zencoder_processed? %>
       <%= videojs_rails sources: { mp4: entry.processed_url }, width: entry.width, height: entry.height %>
     <% else %>
       <p>Still processing</p>
     <% end %>
-  <% else %>
+
+  <% elsif entry.is_image? %>
+
     <p><%= link_to image_tag(entry.original_url, width: 640), entry.original_url %></p>
+
+  <% else %>
+
+    <%= link_to "download", entry.original_url %>
+
   <% end %>
 <% end %>
